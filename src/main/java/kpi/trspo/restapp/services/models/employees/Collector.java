@@ -10,7 +10,6 @@ import javax.persistence.Table;
 
 @Entity
 @Data
-@NoArgsConstructor
 public final class Collector extends Employee {
 
     public Camera assemble(CameraBack cameraBack, CameraBody cameraBody, CameraLens lens) {
@@ -36,7 +35,9 @@ public final class Collector extends Employee {
         return new CameraLens(focalLength, lensType);
     }
 
-    // Наверное надо добавить конструктор
+    public Collector(String name, String surname, String phone) {
+        super(name, surname, phone);
+    }
 
     @Override
     public String toString() {

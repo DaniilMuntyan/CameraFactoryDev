@@ -1,5 +1,6 @@
 package kpi.trspo.restapp.services.models.machines;
 
+import com.sun.xml.internal.bind.v2.runtime.reflect.Lister;
 import kpi.trspo.restapp.services.models.camera.Camera;
 import lombok.*;
 
@@ -10,7 +11,6 @@ import javax.persistence.Entity;
 @DiscriminatorValue("PACKER")
 
 @Data
-@NoArgsConstructor
 public final class Packer extends Machine {
 
     public boolean pack(Camera camera) {
@@ -20,6 +20,10 @@ public final class Packer extends Machine {
         camera.setIsPacked(true);
 
         return true;
+    }
+
+    public Packer(String name) {
+        super(name);
     }
 
     @Override

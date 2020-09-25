@@ -13,7 +13,6 @@ import java.util.Random;
 @DiscriminatorValue("TESTER")
 
 @Data
-@NoArgsConstructor
 public final class Tester extends Machine {
 
     public boolean checkDimensions(CameraBack cameraBack) {
@@ -24,6 +23,10 @@ public final class Tester extends Machine {
     public boolean checkAutofocus(Camera camera) {
         Boolean isDefected = new Random().nextInt(4) == 0; // Probability of defect: 1/4
         return !isDefected;
+    }
+
+    public Tester(String name) {
+        super(name);
     }
 
     @Override

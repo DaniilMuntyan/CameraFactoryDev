@@ -12,7 +12,6 @@ import java.util.Random;
 @DiscriminatorValue("CALIBRATOR")
 
 @Data
-@NoArgsConstructor
 public final class Calibrator extends Machine {
 
     public boolean checkMatrix(CameraBack cameraBack) {
@@ -32,6 +31,10 @@ public final class Calibrator extends Machine {
         String colorInfo = "Lens angle of view: " + lensAngleOfView.toString() + "\nLens speed: " +
                 lensSpeed.toString() + "\nDepth of field: " + depthOfField.toString();
         return colorInfo;
+    }
+
+    public Calibrator(String name) {
+        super(name);
     }
 
     @Override

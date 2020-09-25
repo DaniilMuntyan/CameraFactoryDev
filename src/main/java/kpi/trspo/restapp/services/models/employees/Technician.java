@@ -7,19 +7,13 @@ import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 import java.util.Random;
 
-
 @Entity
 @Data
-@NoArgsConstructor
 public final class Technician extends Employee {
 
-    /*public Technician(String name, String surname) {
-        super(name, surname);
-    }*/
-
-    /*public Technician(String name, String surname, String phone) {
+    public Technician(String name, String surname, String phone) {
         super(name, surname, phone);
-    }*/
+    }
 
     public boolean checkAudioSystem(Camera camera) {
         Boolean isDefected = new Random().nextInt(10) == 0; // Probability of defect: 1/10

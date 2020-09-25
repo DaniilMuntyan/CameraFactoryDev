@@ -11,6 +11,7 @@ import java.util.UUID;
 
 @Data
 @NoArgsConstructor
+@RequiredArgsConstructor
 public class Machine {
     @Id
     @GeneratedValue

@@ -14,7 +14,6 @@ public class DimensionsConverter implements AttributeConverter<Dimensions, Strin
             return null;
         }
 
-        System.out.println("IN convertToDatabaseColumn");
         StringBuilder sb = new StringBuilder();
         sb.append(dimensions.getWidth()).append(SEPARATOR).append(dimensions.getLength())
                 .append(SEPARATOR).append(dimensions.getDepth());
@@ -28,7 +27,6 @@ public class DimensionsConverter implements AttributeConverter<Dimensions, Strin
         }
 
         String[] dimensions = s.split("x");
-        System.out.println("IN convertToEntityAttribute");
         return new Dimensions(Integer.parseInt(dimensions[0]), Integer.parseInt(dimensions[1]),
                 Integer.parseInt(dimensions[2]));
     }
