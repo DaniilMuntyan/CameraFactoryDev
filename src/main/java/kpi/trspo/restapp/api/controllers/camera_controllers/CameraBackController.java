@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/camera_backs")
+@RequestMapping("/api/camera_back")
 public final class CameraBackController {
 
     @Autowired

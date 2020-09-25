@@ -29,6 +29,7 @@ public final class CameraLens {
     private LensType lensType;
 
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "cameraLens")
+    @JoinColumn(name = "camera_id")
     private Camera camera;
 
     @Override

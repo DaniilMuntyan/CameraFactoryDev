@@ -28,6 +28,7 @@ public final class CameraBody {
     private String color;
 
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "cameraBody")
+    @JoinColumn(name = "camera_id")
     private Camera camera;
 
     @Override

@@ -10,6 +10,7 @@ import javax.persistence.Table;
 
 @Entity
 @Data
+@NoArgsConstructor
 public final class Collector extends Employee {
 
     public Camera assemble(CameraBack cameraBack, CameraBody cameraBody, CameraLens lens) {

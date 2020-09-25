@@ -1,13 +1,9 @@
 package kpi.trspo.restapp.api.controllers.machine_controllers;
 
 
-import kpi.trspo.restapp.api.dto.employee_dto.EmployeeDTO;
 import kpi.trspo.restapp.api.dto.machine_dto.MachineDTO;
-import kpi.trspo.restapp.services.models.employees.Collector;
-import kpi.trspo.restapp.services.models.employees.Employee;
 import kpi.trspo.restapp.services.models.machines.Calibrator;
 import kpi.trspo.restapp.services.models.machines.Machine;
-import kpi.trspo.restapp.services.repositories.EmployeeRepository;
 import kpi.trspo.restapp.services.repositories.MachineRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

@@ -15,8 +15,9 @@ import java.util.ArrayDeque;
 @RequiredArgsConstructor
 public final class Manager extends Employee {
 
-    @OneToMany(targetEntity = Camera.class, cascade = CascadeType.ALL)
-    @JoinColumn(name = "defects_fk", referencedColumnName = "id")
+    //@OneToMany(targetEntity = Camera.class, cascade = CascadeType.ALL)
+    //@JoinColumn(name = "defects_fk", referencedColumnName = "id")
+    @OneToMany(mappedBy = "manager")
     private final List<Camera> defect_queue;
 
     public void orderDetailsFor(Camera camera) {
@@ -35,7 +36,7 @@ public final class Manager extends Employee {
     private String getDefectList() {
         String detailsToAdd = "";
         for (Camera camera: defect_queue) {
-            detailsToAdd = detailsToAdd.concat(camera.getId() + "\n");
+            detailsToAdd = detailsToAdd.concat(camera.getCamera_id() + "\n");
         }
         return detailsToAdd;
     }
