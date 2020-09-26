@@ -1,20 +1,38 @@
 package kpi.trspo.restapp.services;
 
-import kpi.trspo.restapp.services.models.camera.Camera;
-import kpi.trspo.restapp.services.models.employees.Manager;
+import kpi.trspo.restapp.entities.camera.Camera;
+import kpi.trspo.restapp.entities.employees.Employee;
+import kpi.trspo.restapp.entities.employees.Manager;
+import kpi.trspo.restapp.repositories.employee_repo.ManagerRepository;
+import kpi.trspo.restapp.services.models.EmployeeService;
+import kpi.trspo.restapp.services.validation.ValidService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
+import java.util.UUID;
+
+@Service
 public final class OrderService {
+
+    @Autowired
+    private EmployeeService employeeService;
+
+    @Autowired
+    private ValidService validService;
 
     public void reportAboutDefect(Manager manager, Camera camera) {
         manager.addToOrder(camera);
-        System.out.println("Defect of camera (" + camera.getCamera_id() + ") has been reported to manager " +
-                manager.getName() + " " + manager.getSurname());
+        camera.setManager(manager);
+        this.employeeService.save(manager);
     }
 
-    public void orderDetails(Manager manager, Camera camera) {
-        manager.orderDetailsFor(camera);
-        System.out.println("Manager " + manager.getName() + " " + manager.getSurname() +
-                " has ordered details for camera " + camera.getCamera_id());
-    }
+    public Manager orderDetails(UUID managerId) throws Exception {
+        this.validService.checkValidId(managerId, Manager.class);
+        Manager manager = this.employeeService.findManager(managerId);
+        this.validService.checkObjectNotFound(manager, managerId);
 
+        manager.orderDetails();
+
+        return this.employeeService.save(manager);
+    }
 }

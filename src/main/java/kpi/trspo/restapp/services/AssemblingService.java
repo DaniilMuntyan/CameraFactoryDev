@@ -1,9 +1,15 @@
 package kpi.trspo.restapp.services;
 
-import javassist.NotFoundException;
-import kpi.trspo.restapp.services.models.camera.*;
-import kpi.trspo.restapp.services.models.employees.Collector;
-import kpi.trspo.restapp.services.repositories.*;
+import kpi.trspo.restapp.exception.InvalidRequestException;
+import kpi.trspo.restapp.exception.ResourceNotAllowedException;
+import kpi.trspo.restapp.exception.ResourceNotFoundException;
+import kpi.trspo.restapp.entities.camera.*;
+import kpi.trspo.restapp.entities.employees.Collector;
+import kpi.trspo.restapp.repositories.employee_repo.CollectorRepository;
+import kpi.trspo.restapp.services.models.CameraService;
+import kpi.trspo.restapp.services.models.EmployeeService;
+import kpi.trspo.restapp.services.models.MachineService;
+import kpi.trspo.restapp.services.validation.ValidService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -13,164 +19,109 @@ import java.util.UUID;
 public final class AssemblingService {
 
     @Autowired
-    private CameraRepository cameraRepository;
+    private CameraService cameraService;
 
     @Autowired
-    private CameraBackRepository cameraBackRepository;
+    private EmployeeService employeeService;
 
     @Autowired
-    private CameraBodyRepository cameraBodyRepository;
+    private ValidService validService;
 
-    @Autowired
-    private CameraLensRepository cameraLensRepository;
+    public CameraBack assembleBack(UUID collectorId, Dimensions backDims, Integer resolution, Integer colorDepth)
+            throws InvalidRequestException, ResourceNotFoundException {
 
-    @Autowired
-    private CollectorRepository collectorRepository;
+        CameraBack cameraBack = this.checkAndAssembleCameraBack(collectorId, backDims, resolution, colorDepth);
+        return this.cameraService.save(cameraBack);
+    }
 
-    public CameraBack assembleBack(UUID collectorId, Dimensions backDims,
-                                   Integer resolution, Integer colorDepth) throws NotFoundException {
+    public CameraBody assembleBody(UUID collectorId, Dimensions dimensions, String color)
+            throws InvalidRequestException, ResourceNotFoundException {
 
-        if(collectorId == null) {
-            return null;
-        }
+        CameraBody cameraBody = this.checkAndAssembleCameraBody(collectorId, dimensions, color);
+        return this.cameraService.save(cameraBody);
+    }
+
+    public CameraLens assembleLens(UUID collectorId, Integer focalLength, LensType lensType)
+            throws InvalidRequestException, ResourceNotFoundException {
+
+        CameraLens cameraLens = this.checkAndAssembleCameraLens(collectorId, focalLength, lensType);
+        return this.cameraService.save(cameraLens);
+    }
+
+    public Camera assembleCamera(UUID collectorId, UUID cameraBackId, UUID cameraBodyId, UUID cameraLensId)
+            throws ResourceNotFoundException, ResourceNotAllowedException, InvalidRequestException {
+
+        Camera camera = checkAndAssembleCamera(collectorId, cameraBackId, cameraBodyId, cameraLensId);
+        return this.cameraService.save(camera);
+    }
+
+    private CameraBack checkAndAssembleCameraBack(UUID collectorId, Dimensions backDims, Integer resolution,
+                                                 Integer colorDepth)
+            throws InvalidRequestException, ResourceNotFoundException {
+
+        this.validService.checkValidId(collectorId, Collector.class);
 
         Collector collector = this.findCollector(collectorId);
 
-        if (collector == null) {
-            throw new NotFoundException(String.format("Collector with id %s does not exist!", collectorId));
-        }
+        this.validService.checkObjectNotFound(collector, collectorId);
 
-        CameraBack cameraBack = collector.assemble(backDims, resolution, colorDepth);
-        return cameraBackRepository.save(cameraBack);
+        return collector.assemble(backDims, resolution, colorDepth);
     }
 
-    public CameraBody assembleBody(UUID collectorId, Dimensions dimensions, String color) throws NotFoundException {
-        if(collectorId == null) {
-            return null;
-        }
+    private CameraBody checkAndAssembleCameraBody(UUID collectorId, Dimensions dimensions, String color)
+            throws InvalidRequestException, ResourceNotFoundException {
+
+        this.validService.checkValidId(collectorId, Collector.class);
 
         Collector collector = this.findCollector(collectorId);
 
-        if (collector == null) {
-            throw new NotFoundException(String.format("Collector with id %s does not exist!", collectorId));
-        }
+        this.validService.checkObjectNotFound(collector, collectorId);
 
-        CameraBody cameraBody = collector.assemble(dimensions, color);
-
-        return cameraBodyRepository.save(cameraBody);
+        return collector.assemble(dimensions, color);
     }
 
-    public CameraLens assembleLens(UUID collectorId, Integer focalLength, LensType lensType) throws NotFoundException {
-        if(collectorId == null) {
-            return null;
-        }
+    private CameraLens checkAndAssembleCameraLens(UUID collectorId, Integer focalLength, LensType lensType)
+            throws InvalidRequestException, ResourceNotFoundException {
+
+        this.validService.checkValidId(collectorId, Collector.class);
 
         Collector collector = this.findCollector(collectorId);
 
-        if (collector == null) {
-            throw new NotFoundException(String.format("Collector with id %s does not exist!", collectorId));
-        }
+        this.validService.checkObjectNotFound(collector, collectorId);
 
-        CameraLens cameraLens = collector.assemble(focalLength, lensType);
-
-        return cameraLensRepository.save(cameraLens);
+        return collector.assemble(focalLength, lensType);
     }
 
-    public Camera assembleCamera(UUID collectorId, UUID cameraBackId, UUID cameraBodyId,
-                                 UUID cameraLensId) throws NotFoundException {
+    private Camera checkAndAssembleCamera(UUID collectorId, UUID cameraBackId, UUID cameraBodyId,
+                                 UUID cameraLensId)
+            throws ResourceNotFoundException, ResourceNotAllowedException, InvalidRequestException {
 
-        if(collectorId == null || cameraBackId == null || cameraBodyId == null || cameraLensId == null) {
-            return null;
-        }
+        this.validService.checkValidId(collectorId, Collector.class);
+        this.validService.checkValidId(cameraBackId, CameraBack.class);
+        this.validService.checkValidId(cameraBodyId, CameraBody.class);
+        this.validService.checkValidId(cameraLensId, CameraLens.class);
 
         Collector collector = this.findCollector(collectorId);
+        CameraBack cameraBack = this.cameraService.findCameraBack(cameraBackId);
+        CameraBody cameraBody = this.cameraService.findCameraBody(cameraBodyId);
+        CameraLens cameraLens = this.cameraService.findCameraLens(cameraLensId);
 
-        if(collector == null) {
-            throw new NotFoundException(String.format("Collector with id %s does not exist!", collectorId));
-        }
+        this.validService.checkObjectNotFound(collector, collectorId);
+        this.validService.checkObjectNotFound(cameraBack, cameraBackId);
+        this.validService.checkObjectNotFound(cameraBody, cameraBodyId);
+        this.validService.checkObjectNotFound(cameraLens, cameraLensId);
 
-        CameraBack cameraBack = this.findCameraBack(cameraBackId);
+        this.validService.checkForUsed(cameraBack);
+        this.validService.checkForUsed(cameraBody);
+        this.validService.checkForUsed(cameraLens);
 
-        if(cameraBack == null) {
-            throw new NotFoundException(String.format("Camera back with id %s does not exist!", cameraBackId));
-        }
-
-        CameraBody cameraBody = this.findCameraBody(cameraBodyId);
-
-        if(cameraBody == null) {
-            throw new NotFoundException(String.format("Camera body with id %s does not exist!", cameraBodyId));
-        }
-
-        CameraLens cameraLens = this.findCameraLens(cameraLensId);
-
-        if(cameraLens == null) {
-            throw new NotFoundException(String.format("Camera lens with id %s does not exist!", cameraLensId));
-        }
-
-        Camera camera = collector.assemble(cameraBack, cameraBody, cameraLens);
-
-        return this.cameraRepository.save(camera);
+        return collector.assemble(cameraBack, cameraBody, cameraLens);
     }
 
-
-    public CameraBack findCameraBack(UUID cameraBackId) {
-        if (cameraBackId == null)
-            return null;
-
-        return this.cameraBackRepository.findById(cameraBackId).orElse(null);
-    }
-
-    public CameraBody findCameraBody(UUID cameraBodyId) {
-        if (cameraBodyId == null)
-            return null;
-
-        return this.cameraBodyRepository.findById(cameraBodyId).orElse(null);
-    }
-
-    public CameraLens findCameraLens(UUID cameraLensId) {
-        if (cameraLensId == null)
-            return null;
-
-        return this.cameraLensRepository.findById(cameraLensId).orElse(null);
-    }
-
-    public Collector findCollector(UUID collectorId) {
+    private Collector findCollector(UUID collectorId) {
         if (collectorId == null)
             return null;
 
-        return this.collectorRepository.findById(collectorId).orElse(null);
+        return this.employeeService.findCollector(collectorId);
     }
-
-    /*public List<CameraBack> findAllBack() {
-        return cameraBackRepository.findAll();
-    }
-
-    public List<CameraBody> findAllBody() {
-        return cameraBodyRepository.findAll();
-    }
-
-    public List<CameraLens> findAllLens() {
-        return cameraLensRepository.findAll();
-    }
-
-    public List<Camera> findAllCamera() {
-        return cameraRepository.findAll();
-    }*/
-
-    public CameraBack save(CameraBack cameraBack) {
-        return this.cameraBackRepository.save(cameraBack);
-    }
-
-    public CameraBody save(CameraBody cameraBody) {
-        return this.cameraBodyRepository.save(cameraBody);
-    }
-
-    public CameraLens save(CameraLens cameraLens) {
-        return this.cameraLensRepository.save(cameraLens);
-    }
-
-    public Camera save(Camera camera) {
-        return this.cameraRepository.save(camera);
-    }
-
 }

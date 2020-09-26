@@ -1,6 +1,6 @@
 package kpi.trspo.restapp.api.dto.camera_dto;
 
-import kpi.trspo.restapp.services.models.camera.Dimensions;
+import kpi.trspo.restapp.entities.camera.Dimensions;
 import lombok.Data;
 
 @Data

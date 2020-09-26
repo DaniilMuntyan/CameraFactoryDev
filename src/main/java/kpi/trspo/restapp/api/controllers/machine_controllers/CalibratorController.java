@@ -2,9 +2,9 @@ package kpi.trspo.restapp.api.controllers.machine_controllers;
 
 
 import kpi.trspo.restapp.api.dto.machine_dto.MachineDTO;
-import kpi.trspo.restapp.services.models.machines.Calibrator;
-import kpi.trspo.restapp.services.models.machines.Machine;
-import kpi.trspo.restapp.services.repositories.MachineRepository;
+import kpi.trspo.restapp.entities.machines.Calibrator;
+import kpi.trspo.restapp.repositories.machine_repo.CalibratorRepository;
+import kpi.trspo.restapp.services.models.MachineService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -16,17 +16,17 @@ import java.util.List;
 public final class CalibratorController {
 
     @Autowired
-    private MachineRepository machineRepository;
+    private MachineService machineService;
 
     @PostMapping
     public ResponseEntity<Calibrator> create(@RequestBody MachineDTO machineDTO) {
         Calibrator newCalibrator = new Calibrator(machineDTO.getName());
-        return ResponseEntity.ok(this.machineRepository.save(newCalibrator));
+        return ResponseEntity.ok(this.machineService.save(newCalibrator));
     }
 
     @GetMapping
-    public ResponseEntity<List<Machine>> show() {
-        return ResponseEntity.ok(this.machineRepository.findAll());
+    public ResponseEntity<List<Calibrator>> show() {
+        return ResponseEntity.ok(this.machineService.findAllCalibrators());
     }
 
 }

@@ -1,51 +1,54 @@
 package kpi.trspo.restapp.services;
 
-import kpi.trspo.restapp.services.models.camera.Camera;
-import kpi.trspo.restapp.services.models.camera.CameraBack;
-import kpi.trspo.restapp.services.models.machines.Calibrator;
+import com.sun.xml.internal.ws.api.databinding.ClientCallBridge;
+import javafx.util.Pair;
+import kpi.trspo.restapp.entities.camera.Camera;
+import kpi.trspo.restapp.entities.camera.CameraBack;
+import kpi.trspo.restapp.entities.machines.Calibrator;
+import kpi.trspo.restapp.services.models.CameraService;
+import kpi.trspo.restapp.services.models.MachineService;
+import kpi.trspo.restapp.services.validation.ValidService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.io.FileWriter;
-import java.io.IOException;
+import java.util.UUID;
 
 @Service
 public final class CalibrationService {
 
-    public void checkMatrix(Calibrator calibrator, CameraBack cameraBack) {
-        Boolean matrixCheck = calibrator.checkMatrix(cameraBack);
-        String resultChecking;
+    @Autowired
+    private CameraService cameraService;
 
-        cameraBack.setMatrixCheck(matrixCheck);
+    @Autowired
+    private MachineService machineService;
 
-        resultChecking = matrixCheck ? "Matrix is serviceable" : "Matrix is defective";
+    @Autowired
+    private ValidService validService;
 
-        System.out.println("Calibrator " + calibrator.getName() + " has checked the matrix of camera back " + cameraBack.getId() +
-                ". " + resultChecking);
+    public Camera calibrateCamera(UUID calibratorId, UUID cameraId) throws Exception {
+        Pair<Calibrator, Camera> calibrator_camera = this.getCalibratorAndCamera(calibratorId, cameraId);
+        Calibrator calibrator = calibrator_camera.getKey();
+        Camera camera = calibrator_camera.getValue();
+
+        CameraBack cameraBack = this.cameraService.findCameraBack(camera.getCameraBack().getId());
+        calibrator.checkMatrix(cameraBack);
+        this.cameraService.save(cameraBack);
+
+        calibrator.innerCharacteristics(camera);
+
+        return this.cameraService.save(camera);
     }
 
-    public void innerCharacteristics(Calibrator calibrator, Camera camera) {
-        String innerInfo = calibrator.innerCharacteristics(camera);
+    private Pair<Calibrator, Camera> getCalibratorAndCamera(UUID calibratorId, UUID cameraId) throws Exception {
+        this.validService.checkValidId(calibratorId, Calibrator.class);
+        this.validService.checkValidId(cameraId, Camera.class);
 
-        camera.setInnerInfo(innerInfo);
+        Calibrator calibrator = this.machineService.findCalibrator(calibratorId);
+        Camera camera = this.cameraService.findCamera(cameraId);
 
-        System.out.println("Calibrator " + calibrator.getName() + " has got color characteristics of camera " +
-                camera.getCamera_id() + ":\n" + camera.getInnerInfo());
+        this.validService.checkObjectNotFound(calibrator, calibratorId);
+        this.validService.checkObjectNotFound(camera, cameraId);
+
+        return new Pair<>(calibrator, camera);
     }
-
-    public void saveResults(Camera camera) {
-        try {
-            FileWriter csvWriter = new FileWriter("calibration_results.csv");
-            String toWrite = camera.getCamera_id() + "," + camera.getCameraBack().getMatrixCheck().toString() + "," +
-                    camera.getInnerInfo().replace("\n", ",") + "\n";
-
-            csvWriter.append(toWrite);
-            csvWriter.flush();
-            csvWriter.close();
-        } catch (IOException e) {
-            System.out.println("Results saving failed");
-        }
-        System.out.println("Information about camera " + camera.getCamera_id() + " has been saved");
-
-    }
-
 }
