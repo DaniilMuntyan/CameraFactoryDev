@@ -18,50 +18,48 @@ import java.util.UUID;
 @Service
 public final class AssemblingService {
 
-    @Autowired
-    private CameraService cameraService;
+    private final CameraService cameraService;
+
+    private final EmployeeService employeeService;
+
+    private final ValidService validService;
 
     @Autowired
-    private EmployeeService employeeService;
-
-    @Autowired
-    private ValidService validService;
+    public AssemblingService(CameraService cameraService, EmployeeService employeeService, ValidService validService) {
+        this.cameraService = cameraService;
+        this.employeeService = employeeService;
+        this.validService = validService;
+    }
 
     public CameraBack assembleBack(UUID collectorId, Dimensions backDims, Integer resolution, Integer colorDepth)
             throws InvalidRequestException, ResourceNotFoundException {
-
         CameraBack cameraBack = this.checkAndAssembleCameraBack(collectorId, backDims, resolution, colorDepth);
         return this.cameraService.save(cameraBack);
     }
 
     public CameraBody assembleBody(UUID collectorId, Dimensions dimensions, String color)
             throws InvalidRequestException, ResourceNotFoundException {
-
         CameraBody cameraBody = this.checkAndAssembleCameraBody(collectorId, dimensions, color);
         return this.cameraService.save(cameraBody);
     }
 
     public CameraLens assembleLens(UUID collectorId, Integer focalLength, LensType lensType)
             throws InvalidRequestException, ResourceNotFoundException {
-
         CameraLens cameraLens = this.checkAndAssembleCameraLens(collectorId, focalLength, lensType);
         return this.cameraService.save(cameraLens);
     }
 
     public Camera assembleCamera(UUID collectorId, UUID cameraBackId, UUID cameraBodyId, UUID cameraLensId)
             throws ResourceNotFoundException, ResourceNotAllowedException, InvalidRequestException {
-
         Camera camera = checkAndAssembleCamera(collectorId, cameraBackId, cameraBodyId, cameraLensId);
         return this.cameraService.save(camera);
     }
 
-    private CameraBack checkAndAssembleCameraBack(UUID collectorId, Dimensions backDims, Integer resolution,
-                                                 Integer colorDepth)
+    private CameraBack checkAndAssembleCameraBack(UUID collectorId, Dimensions backDims, Integer resolution, Integer colorDepth)
             throws InvalidRequestException, ResourceNotFoundException {
-
         this.validService.checkValidId(collectorId, Collector.class);
 
-        Collector collector = this.findCollector(collectorId);
+        Collector collector = this.employeeService.findCollector(collectorId);
 
         this.validService.checkObjectNotFound(collector, collectorId);
 
@@ -70,10 +68,9 @@ public final class AssemblingService {
 
     private CameraBody checkAndAssembleCameraBody(UUID collectorId, Dimensions dimensions, String color)
             throws InvalidRequestException, ResourceNotFoundException {
-
         this.validService.checkValidId(collectorId, Collector.class);
 
-        Collector collector = this.findCollector(collectorId);
+        Collector collector = this.employeeService.findCollector(collectorId);
 
         this.validService.checkObjectNotFound(collector, collectorId);
 
@@ -82,26 +79,23 @@ public final class AssemblingService {
 
     private CameraLens checkAndAssembleCameraLens(UUID collectorId, Integer focalLength, LensType lensType)
             throws InvalidRequestException, ResourceNotFoundException {
-
         this.validService.checkValidId(collectorId, Collector.class);
 
-        Collector collector = this.findCollector(collectorId);
+        Collector collector = this.employeeService.findCollector(collectorId);
 
         this.validService.checkObjectNotFound(collector, collectorId);
 
         return collector.assemble(focalLength, lensType);
     }
 
-    private Camera checkAndAssembleCamera(UUID collectorId, UUID cameraBackId, UUID cameraBodyId,
-                                 UUID cameraLensId)
+    private Camera checkAndAssembleCamera(UUID collectorId, UUID cameraBackId, UUID cameraBodyId, UUID cameraLensId)
             throws ResourceNotFoundException, ResourceNotAllowedException, InvalidRequestException {
-
         this.validService.checkValidId(collectorId, Collector.class);
         this.validService.checkValidId(cameraBackId, CameraBack.class);
         this.validService.checkValidId(cameraBodyId, CameraBody.class);
         this.validService.checkValidId(cameraLensId, CameraLens.class);
 
-        Collector collector = this.findCollector(collectorId);
+        Collector collector = this.employeeService.findCollector(collectorId);
         CameraBack cameraBack = this.cameraService.findCameraBack(cameraBackId);
         CameraBody cameraBody = this.cameraService.findCameraBody(cameraBodyId);
         CameraLens cameraLens = this.cameraService.findCameraLens(cameraLensId);
@@ -115,13 +109,12 @@ public final class AssemblingService {
         this.validService.checkForUsed(cameraBody);
         this.validService.checkForUsed(cameraLens);
 
-        return collector.assemble(cameraBack, cameraBody, cameraLens);
-    }
+        Camera newCamera = collector.assemble(cameraBack, cameraBody, cameraLens);
 
-    private Collector findCollector(UUID collectorId) {
-        if (collectorId == null)
-            return null;
+        this.cameraService.save(cameraBack);
+        this.cameraService.save(cameraBody);
+        this.cameraService.save(cameraLens);
 
-        return this.employeeService.findCollector(collectorId);
+        return newCamera;
     }
 }

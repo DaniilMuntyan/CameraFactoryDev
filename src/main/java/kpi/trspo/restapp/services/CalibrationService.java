@@ -16,14 +16,18 @@ import java.util.UUID;
 @Service
 public final class CalibrationService {
 
-    @Autowired
-    private CameraService cameraService;
+    private final CameraService cameraService;
+
+    private final MachineService machineService;
+
+    private final ValidService validService;
 
     @Autowired
-    private MachineService machineService;
-
-    @Autowired
-    private ValidService validService;
+    public CalibrationService(CameraService cameraService, MachineService machineService, ValidService validService) {
+        this.cameraService = cameraService;
+        this.machineService = machineService;
+        this.validService = validService;
+    }
 
     public Camera calibrateCamera(UUID calibratorId, UUID cameraId) throws Exception {
         Pair<Calibrator, Camera> calibrator_camera = this.getCalibratorAndCamera(calibratorId, cameraId);

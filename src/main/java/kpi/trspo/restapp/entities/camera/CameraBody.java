@@ -29,10 +29,4 @@ public final class CameraBody {
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "cameraBody", orphanRemoval = true)
     @JoinColumn(name = "camera_id")
     private Camera camera;
-
-    @Override
-    public String toString() {
-        return "Camera body id: " + id + "cm\nDimensions: " + dimensions + "\nColor: " + color;
-    }
-
 }

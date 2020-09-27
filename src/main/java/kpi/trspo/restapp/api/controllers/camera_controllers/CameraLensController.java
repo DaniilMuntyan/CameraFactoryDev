@@ -1,6 +1,5 @@
 package kpi.trspo.restapp.api.controllers.camera_controllers;
 
-import kpi.trspo.restapp.api.dto.camera_dto.CameraLensDTO;
 import kpi.trspo.restapp.entities.camera.CameraLens;
 import kpi.trspo.restapp.repositories.camera_repo.CameraLensRepository;
 import kpi.trspo.restapp.services.models.CameraService;
@@ -11,16 +10,14 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/camera_lens")
+@RequestMapping("/api/lens")
 public final class CameraLensController {
 
-    @Autowired
-    private CameraService cameraService;
+    private final CameraService cameraService;
 
-    @PostMapping
-    public ResponseEntity<CameraLens> create(@RequestBody CameraLensDTO lensDTO) {
-        CameraLens newCameraLens = new CameraLens(lensDTO.getFocalLength(), lensDTO.getLensType());
-        return ResponseEntity.ok(this.cameraService.save(newCameraLens));
+    @Autowired
+    public CameraLensController(CameraService cameraService) {
+        this.cameraService = cameraService;
     }
 
     @GetMapping

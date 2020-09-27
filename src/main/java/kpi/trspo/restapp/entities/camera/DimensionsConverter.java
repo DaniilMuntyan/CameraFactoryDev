@@ -4,8 +4,7 @@ import javax.persistence.AttributeConverter;
 import javax.persistence.Converter;
 
 @Converter
-public class DimensionsConverter implements AttributeConverter<Dimensions, String> {
-
+public final class DimensionsConverter implements AttributeConverter<Dimensions, String> {
     private static final String SEPARATOR = "x";
 
     @Override

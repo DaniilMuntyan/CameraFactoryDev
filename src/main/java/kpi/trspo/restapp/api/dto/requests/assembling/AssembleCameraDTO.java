@@ -5,7 +5,7 @@ import lombok.Data;
 import java.util.UUID;
 
 @Data
-public final class AssembleCamera {
+public final class AssembleCameraDTO {
     private UUID collectorId;
     private UUID cameraBackId;
     private UUID cameraBodyId;

@@ -13,17 +13,12 @@ import javax.persistence.Entity;
 @NoArgsConstructor
 public final class Packer extends Machine {
 
-    public void pack(Camera camera) {
-        camera.setIsPacked(true);
-    }
-
     public Packer(String name) {
         super(name);
     }
 
-    @Override
-    public String toString() {
-        return "Packing machine id: " + getId() + "\nName: " + getName();
+    public void pack(Camera camera) {
+        camera.setIsPacked(true);
     }
 
 }

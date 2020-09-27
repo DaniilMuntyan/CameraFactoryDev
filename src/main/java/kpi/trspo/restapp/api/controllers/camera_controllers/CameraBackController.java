@@ -1,6 +1,5 @@
 package kpi.trspo.restapp.api.controllers.camera_controllers;
 
-import kpi.trspo.restapp.api.dto.camera_dto.CameraBackDTO;
 import kpi.trspo.restapp.entities.camera.CameraBack;
 import kpi.trspo.restapp.repositories.camera_repo.CameraBackRepository;
 import kpi.trspo.restapp.services.models.CameraService;
@@ -11,17 +10,14 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/camera_back")
+@RequestMapping("/api/backs")
 public final class CameraBackController {
 
-    @Autowired
-    private CameraService cameraService;
+    private final CameraService cameraService;
 
-    @PostMapping
-    public ResponseEntity<CameraBack> create(@RequestBody CameraBackDTO backDTO) {
-        CameraBack newCameraBack = new CameraBack(backDTO.getDimensions(), backDTO.getResolution(),
-                backDTO.getColorDepth());
-        return ResponseEntity.ok(this.cameraService.save(newCameraBack));
+    @Autowired
+    public CameraBackController(CameraService cameraService) {
+        this.cameraService = cameraService;
     }
 
     @GetMapping

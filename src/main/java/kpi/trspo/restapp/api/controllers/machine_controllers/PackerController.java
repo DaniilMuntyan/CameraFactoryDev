@@ -11,11 +11,15 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/packer")
+@RequestMapping("/api/packers")
 public final class PackerController {
 
+    private final MachineService machineService;
+
     @Autowired
-    private MachineService machineService;
+    public PackerController(MachineService machineService) {
+        this.machineService = machineService;
+    }
 
     @PostMapping
     public ResponseEntity<Packer> create(@RequestBody MachineDTO machineDTO) {

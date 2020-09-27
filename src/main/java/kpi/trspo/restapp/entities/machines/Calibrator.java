@@ -15,6 +15,10 @@ import java.util.Random;
 @NoArgsConstructor
 public final class Calibrator extends Machine {
 
+    public Calibrator(String name) {
+        super(name);
+    }
+
     public void checkMatrix(CameraBack cameraBack) {
         Random rnd = new Random();
         Boolean matrixCheck = rnd.nextInt(10) != 0; // Probability of defect: 1/10
@@ -30,15 +34,7 @@ public final class Calibrator extends Machine {
 
         String colorInfo = "Lens angle of view: " + lensAngleOfView.toString() + "\nLens speed: " +
                 lensSpeed.toString() + "\nDepth of field: " + depthOfField.toString();
+
         camera.setInnerInfo(colorInfo);
-    }
-
-    public Calibrator(String name) {
-        super(name);
-    }
-
-    @Override
-    public String toString() {
-        return "Calibration machine id: " + getId() + "\nName: " + getName();
     }
 }

@@ -137,5 +137,4 @@ public final class ValidService {
                     cameraLens.getId()));
     }
     //endregion checkForUsed
-
 }

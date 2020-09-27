@@ -12,11 +12,15 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/tester")
+@RequestMapping("/api/testers")
 public class TesterController {
 
+    private final MachineService machineService;
+
     @Autowired
-    private MachineService machineService;
+    public TesterController(MachineService machineService) {
+        this.machineService = machineService;
+    }
 
     @PostMapping
     public ResponseEntity<Tester> create(@RequestBody MachineDTO machineDTO) {

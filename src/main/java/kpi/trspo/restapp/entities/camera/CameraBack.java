@@ -17,7 +17,8 @@ public final class CameraBack {
     @GeneratedValue
     private UUID id;
 
-    private Boolean matrixCheck;
+    @Column(name = "matrix_check")
+    private Boolean matrixCheck = false;
 
     @Convert(converter = DimensionsConverter.class)
     @NonNull
@@ -35,11 +36,4 @@ public final class CameraBack {
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "cameraBack", orphanRemoval = true)
     @JoinColumn(name = "camera_id")
     private Camera camera;
-
-    @Override
-    public String toString() {
-        Dimensions dim = new Dimensions();
-        return "Camera back id: " + id + "\nDimensions: " + dimensions + "\nResolution: " + resolution +
-                " MP\nColor depth: " + colorDepth + " bpp";
-    }
 }

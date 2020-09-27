@@ -6,8 +6,9 @@ import lombok.Data;
 import java.util.UUID;
 
 @Data
-public final class AssembleBody {
+public final class AssembleBackDTO {
     private UUID collectorId;
     private Dimensions dimensions;
-    private String color;
+    private Integer resolution;
+    private Integer colorDepth;
 }

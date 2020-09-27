@@ -17,26 +17,32 @@ import java.util.UUID;
 @Service
 public final class MechanicalTestService {
 
-    @Autowired
-    private MachineService machineService;
+    private final MachineService machineService;
+
+    private final EmployeeService employeeService;
+
+    private final CameraService cameraService;
+
+    private final ValidService validService;
 
     @Autowired
-    private EmployeeService employeeService;
-
-    @Autowired
-    private CameraService cameraService;
-
-    @Autowired
-    private ValidService validService;
+    public MechanicalTestService(MachineService machineService, EmployeeService employeeService,
+                                 CameraService cameraService, ValidService validService) {
+        this.machineService = machineService;
+        this.employeeService = employeeService;
+        this.cameraService = cameraService;
+        this.validService = validService;
+    }
 
     public Camera testCamera(UUID testerId, UUID cameraId, UUID technicianId) throws Exception {
         Pair<Tester, Camera> tester_camera = this.getTesterAndCamera(testerId, cameraId);
         Tester tester = tester_camera.getKey();
         Camera camera = tester_camera.getValue();
+
         Technician technician = this.getTechnician(technicianId);
 
         Boolean dimensionsCheck = tester.checkDimensions(camera.getCameraBack());
-        Boolean autoFocusCheck = tester.checkAutofocus(camera);
+        Boolean autoFocusCheck = tester.checkAutoFocus(camera);
         Boolean audioCheck = technician.checkAudioSystem(camera);
 
         if(!dimensionsCheck || !autoFocusCheck || !audioCheck) {

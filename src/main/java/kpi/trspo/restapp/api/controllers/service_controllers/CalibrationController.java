@@ -1,10 +1,9 @@
 package kpi.trspo.restapp.api.controllers.service_controllers;
 
 
-import kpi.trspo.restapp.api.dto.requests.calibration.CalibrateCamera;
+import kpi.trspo.restapp.api.dto.requests.calibration.CalibrateCameraDTO;
 import kpi.trspo.restapp.services.CalibrationService;
 import kpi.trspo.restapp.entities.camera.Camera;
-import kpi.trspo.restapp.services.models.CameraService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -15,13 +14,17 @@ import java.util.UUID;
 @RequestMapping("/api/calibrate")
 public class CalibrationController {
 
+    private final CalibrationService calibrationService;
+
     @Autowired
-    private CalibrationService calibrationService;
+    public CalibrationController(CalibrationService calibrationService) {
+        this.calibrationService = calibrationService;
+    }
 
     @PostMapping
-    public ResponseEntity<Camera> calibrate(@RequestBody CalibrateCamera calibrateCamera) throws Exception {
-        UUID cameraId = calibrateCamera.getCameraId();
-        UUID calibratorId = calibrateCamera.getCalibratorId();
+    public ResponseEntity<Camera> calibrate(@RequestBody CalibrateCameraDTO calibrateCameraDTO) throws Exception {
+        UUID cameraId = calibrateCameraDTO.getCameraId();
+        UUID calibratorId = calibrateCameraDTO.getCalibratorId();
 
         Camera camera = this.calibrationService.calibrateCamera(calibratorId, cameraId);
 

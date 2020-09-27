@@ -1,9 +1,9 @@
 package kpi.trspo.restapp.api.controllers.service_controllers;
 
-import kpi.trspo.restapp.api.dto.requests.assembling.AssembleBack;
-import kpi.trspo.restapp.api.dto.requests.assembling.AssembleBody;
-import kpi.trspo.restapp.api.dto.requests.assembling.AssembleCamera;
-import kpi.trspo.restapp.api.dto.requests.assembling.AssembleLens;
+import kpi.trspo.restapp.api.dto.requests.assembling.AssembleBackDTO;
+import kpi.trspo.restapp.api.dto.requests.assembling.AssembleBodyDTO;
+import kpi.trspo.restapp.api.dto.requests.assembling.AssembleCameraDTO;
+import kpi.trspo.restapp.api.dto.requests.assembling.AssembleLensDTO;
 import kpi.trspo.restapp.services.AssemblingService;
 import kpi.trspo.restapp.entities.camera.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,15 +19,19 @@ import java.util.UUID;
 @RequestMapping("/api/assemble/")
 public class AssembleController {
 
+    private final AssemblingService assemblingService;
+
     @Autowired
-    private AssemblingService assemblingService;
+    public AssembleController(AssemblingService assemblingService) {
+        this.assemblingService = assemblingService;
+    }
 
     @PostMapping("camera_back")
-    public ResponseEntity<CameraBack> assemble(@RequestBody AssembleBack assembleBack) throws Exception {
-        UUID collectorId = assembleBack.getCollectorId();
-        Dimensions dimensions = assembleBack.getDimensions();
-        Integer resolution = assembleBack.getResolution();
-        Integer colorDepth = assembleBack.getColorDepth();
+    public ResponseEntity<CameraBack> assemble(@RequestBody AssembleBackDTO assembleBackDTO) throws Exception {
+        UUID collectorId = assembleBackDTO.getCollectorId();
+        Dimensions dimensions = assembleBackDTO.getDimensions();
+        Integer resolution = assembleBackDTO.getResolution();
+        Integer colorDepth = assembleBackDTO.getColorDepth();
 
         CameraBack newCameraBack = this.assemblingService.assembleBack(collectorId, dimensions, resolution, colorDepth);
 
@@ -35,10 +39,10 @@ public class AssembleController {
     }
 
     @PostMapping("camera_body")
-    public ResponseEntity<CameraBody> assemble(@RequestBody AssembleBody assembleBody) throws Exception {
-        UUID collectorId = assembleBody.getCollectorId();
-        Dimensions dimensions = assembleBody.getDimensions();
-        String color = assembleBody.getColor();
+    public ResponseEntity<CameraBody> assemble(@RequestBody AssembleBodyDTO assembleBodyDTO) throws Exception {
+        UUID collectorId = assembleBodyDTO.getCollectorId();
+        Dimensions dimensions = assembleBodyDTO.getDimensions();
+        String color = assembleBodyDTO.getColor();
 
         CameraBody newCameraBody = this.assemblingService.assembleBody(collectorId, dimensions, color);
 
@@ -46,10 +50,10 @@ public class AssembleController {
     }
 
     @PostMapping("camera_lens")
-    public ResponseEntity<CameraLens> assemble(@RequestBody AssembleLens assembleLens) throws Exception {
-        UUID collectorId = assembleLens.getCollectorId();
-        Integer focalLength = assembleLens.getFocalLength();
-        LensType lensType = assembleLens.getLensType();
+    public ResponseEntity<CameraLens> assemble(@RequestBody AssembleLensDTO assembleLensDTO) throws Exception {
+        UUID collectorId = assembleLensDTO.getCollectorId();
+        Integer focalLength = assembleLensDTO.getFocalLength();
+        LensType lensType = assembleLensDTO.getLensType();
 
         CameraLens newCameraLens = this.assemblingService.assembleLens(collectorId, focalLength, lensType);
 
@@ -57,11 +61,11 @@ public class AssembleController {
     }
 
     @PostMapping("camera")
-    public ResponseEntity<Camera> assemble(@RequestBody AssembleCamera assembleCamera) throws Exception {
-        UUID collectorId = assembleCamera.getCollectorId();
-        UUID cameraBackId = assembleCamera.getCameraBackId();
-        UUID cameraBodyId = assembleCamera.getCameraBodyId();
-        UUID cameraLensId = assembleCamera.getCameraLensId();
+    public ResponseEntity<Camera> assemble(@RequestBody AssembleCameraDTO assembleCameraDTO) throws Exception {
+        UUID collectorId = assembleCameraDTO.getCollectorId();
+        UUID cameraBackId = assembleCameraDTO.getCameraBackId();
+        UUID cameraBodyId = assembleCameraDTO.getCameraBodyId();
+        UUID cameraLensId = assembleCameraDTO.getCameraLensId();
 
         Camera newCamera = this.assemblingService.assembleCamera(collectorId, cameraBackId, cameraBodyId, cameraLensId);
 

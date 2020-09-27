@@ -24,5 +24,4 @@ public final class Dimensions implements Comparable<Dimensions> {
     public int compareTo(Dimensions o) {
         return  (this.width <= o.width && this.length <= o.length && this.depth <= o.depth) ? 1 : -1;
     }
-
 }

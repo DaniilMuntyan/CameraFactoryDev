@@ -20,5 +20,4 @@ public class Machine {
     @Column(name = "name")
     @NonNull
     private String name;
-
 }

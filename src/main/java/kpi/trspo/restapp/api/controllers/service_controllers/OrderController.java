@@ -1,14 +1,10 @@
 package kpi.trspo.restapp.api.controllers.service_controllers;
 
-import kpi.trspo.restapp.api.dto.requests.order.OrderDetail;
-import kpi.trspo.restapp.api.dto.requests.testing.TestCamera;
-import kpi.trspo.restapp.entities.camera.Camera;
+import kpi.trspo.restapp.api.dto.requests.order.OrderDetailDTO;
 import kpi.trspo.restapp.entities.employees.Manager;
 import kpi.trspo.restapp.services.OrderService;
-import kpi.trspo.restapp.services.validation.ValidService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,12 +16,16 @@ import java.util.UUID;
 @RequestMapping("/api/order")
 public final class OrderController {
 
+    private final OrderService orderService;
+
     @Autowired
-    private OrderService orderService;
+    public OrderController(OrderService orderService) {
+        this.orderService = orderService;
+    }
 
     @PostMapping
-    public ResponseEntity<Manager> test(@RequestBody OrderDetail orderDetail) throws Exception {
-        UUID managerId = orderDetail.getManagerId();
+    public ResponseEntity<Manager> order(@RequestBody OrderDetailDTO orderDetailDTO) throws Exception {
+        UUID managerId = orderDetailDTO.getManagerId();
 
         Manager manager = this.orderService.orderDetails(managerId);
         return ResponseEntity.ok(manager);

@@ -17,30 +17,35 @@ import java.util.UUID;
 @Service
 public final class FinalStageService {
 
-    @Autowired
-    private OrderService orderService;
+    private final OrderService orderService;
+
+    private final CameraService cameraService;
+
+    private final EmployeeService employeeService;
+
+    private final MachineService machineService;
+
+    private final ValidService validService;
 
     @Autowired
-    private CameraService cameraService;
+    public FinalStageService(OrderService orderService, CameraService cameraService, EmployeeService employeeService,
+                             MachineService machineService, ValidService validService) {
+        this.orderService = orderService;
+        this.cameraService = cameraService;
+        this.employeeService = employeeService;
+        this.machineService = machineService;
+        this.validService = validService;
+    }
 
-    @Autowired
-    private EmployeeService employeeService;
-
-    @Autowired
-    private MachineService machineService;
-
-    @Autowired
-    private ValidService validService;
-
-    public void flash(Technician technician, Camera camera) {
+    private void flash(Technician technician, Camera camera) {
         technician.flash(camera);
     }
 
-    public void clean(Technician technician, Camera camera) {
+    private void clean(Technician technician, Camera camera) {
         technician.clean(camera);
     }
 
-    public void pack(Packer packer, Camera camera) {
+    private void pack(Packer packer, Camera camera) {
         packer.pack(camera);
     }
 
@@ -58,7 +63,6 @@ public final class FinalStageService {
             this.clean(technician, camera);
             this.pack(packer, camera);
         } else {
-            System.out.println("\n\nREJECTED!!!\n\n");
             this.orderService.reportAboutDefect(manager, camera);
         }
 

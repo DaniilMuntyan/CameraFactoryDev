@@ -1,6 +1,5 @@
 package kpi.trspo.restapp.api.controllers.camera_controllers;
 
-import kpi.trspo.restapp.api.dto.camera_dto.CameraDTO;
 import kpi.trspo.restapp.entities.camera.Camera;
 import kpi.trspo.restapp.repositories.camera_repo.CameraRepository;
 import kpi.trspo.restapp.services.models.CameraService;
@@ -14,13 +13,11 @@ import java.util.List;
 @RequestMapping("/api/cameras")
 public final class CameraController {
 
-    @Autowired
-    private CameraService cameraService;
+    private final CameraService cameraService;
 
-    @PostMapping
-    public ResponseEntity<Camera> create(@RequestBody CameraDTO cameraDTO) {
-        Camera newCamera = new Camera(cameraDTO.getCameraBack(), cameraDTO.getCameraBody(), cameraDTO.getCameraLens());
-        return ResponseEntity.ok(this.cameraService.save(newCamera));
+    @Autowired
+    public CameraController(CameraService cameraService) {
+        this.cameraService = cameraService;
     }
 
     @GetMapping

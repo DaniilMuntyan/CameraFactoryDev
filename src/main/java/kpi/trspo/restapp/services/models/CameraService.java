@@ -19,22 +19,27 @@ import java.util.UUID;
 @Service
 public final class CameraService {
 
-    @Autowired
-    private CameraRepository cameraRepository;
+    private final CameraRepository cameraRepository;
+
+    private final CameraBackRepository cameraBackRepository;
+
+    private final CameraBodyRepository cameraBodyRepository;
+
+    private final CameraLensRepository cameraLensRepository;
 
     @Autowired
-    private CameraBackRepository cameraBackRepository;
-
-    @Autowired
-    private CameraBodyRepository cameraBodyRepository;
-
-    @Autowired
-    private CameraLensRepository cameraLensRepository;
+    public CameraService(CameraRepository cameraRepository, CameraBackRepository cameraBackRepository,
+                         CameraBodyRepository cameraBodyRepository, CameraLensRepository cameraLensRepository) {
+        this.cameraRepository = cameraRepository;
+        this.cameraBackRepository = cameraBackRepository;
+        this.cameraBodyRepository = cameraBodyRepository;
+        this.cameraLensRepository = cameraLensRepository;
+    }
 
     public CameraBack findCameraBack(UUID cameraBackId) {
         if (cameraBackId == null)
             return null;
-        System.out.println(cameraBackId);
+
         return this.cameraBackRepository.findById(cameraBackId).orElse(null);
     }
 
@@ -90,6 +95,4 @@ public final class CameraService {
     public Camera save(Camera camera) {
         return this.cameraRepository.save(camera);
     }
-
-
 }

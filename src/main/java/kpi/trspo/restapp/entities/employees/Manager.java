@@ -17,8 +17,14 @@ public final class Manager extends Employee {
     @OneToMany(mappedBy = "manager")
     private List<Camera> defects;
 
+    public Manager(String name, String surname, String phone) {
+        super(name, surname, phone);
+        this.defects = new ArrayList<>();
+    }
+
     public void orderDetails() {
         Iterator<Camera> i = this.defects.iterator();
+
         while(i.hasNext()) {
             Camera camera = i.next();
             camera.setManager(null);
@@ -32,24 +38,4 @@ public final class Manager extends Employee {
 
         defects.add(camera);
     }
-
-    public Manager(String name, String surname, String phone) {
-        super(name, surname, phone);
-        this.defects = new ArrayList<>();
-    }
-
-    private String getDefectList() {
-        String detailsToAdd = "";
-        for (Camera camera: defects) {
-            detailsToAdd = detailsToAdd.concat(camera.getCamera_id() + "\n");
-        }
-        return detailsToAdd;
-    }
-
-    @Override
-    public String toString() {
-        return "Manager " + getName() + " " + getSurname() + "\nID: " +  getId() + "\nPhone number: " + getPhone() +
-                "\nDetails to order: " + getDefectList();
-    }
-
 }

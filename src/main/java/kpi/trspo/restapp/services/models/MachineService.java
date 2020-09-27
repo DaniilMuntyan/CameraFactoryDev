@@ -16,14 +16,19 @@ import java.util.UUID;
 @Service
 public final class MachineService {
 
-    @Autowired
-    CalibratorRepository calibratorRepository;
+    private final CalibratorRepository calibratorRepository;
+
+    private final TesterRepository testerRepository;
+
+    private final PackerRepository packerRepository;
 
     @Autowired
-    TesterRepository testerRepository;
-
-    @Autowired
-    PackerRepository packerRepository;
+    public MachineService(CalibratorRepository calibratorRepository, TesterRepository testerRepository,
+                          PackerRepository packerRepository) {
+        this.calibratorRepository = calibratorRepository;
+        this.testerRepository = testerRepository;
+        this.packerRepository = packerRepository;
+    }
 
     public Calibrator findCalibrator(UUID calibratorId) {
         if (calibratorId == null)

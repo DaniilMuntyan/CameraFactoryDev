@@ -14,21 +14,29 @@ import java.util.UUID;
 @Service
 public final class OrderService {
 
-    @Autowired
-    private EmployeeService employeeService;
+    private final EmployeeService employeeService;
+
+    private final ValidService validService;
 
     @Autowired
-    private ValidService validService;
+    public OrderService(EmployeeService employeeService, ValidService validService) {
+        this.employeeService = employeeService;
+        this.validService = validService;
+    }
 
     public void reportAboutDefect(Manager manager, Camera camera) {
         manager.addToOrder(camera);
+
         camera.setManager(manager);
+
         this.employeeService.save(manager);
     }
 
     public Manager orderDetails(UUID managerId) throws Exception {
         this.validService.checkValidId(managerId, Manager.class);
+
         Manager manager = this.employeeService.findManager(managerId);
+
         this.validService.checkObjectNotFound(manager, managerId);
 
         manager.orderDetails();

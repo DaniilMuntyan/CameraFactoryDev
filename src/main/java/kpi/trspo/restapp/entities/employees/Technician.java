@@ -16,7 +16,7 @@ public final class Technician extends Employee {
     }
 
     public boolean checkAudioSystem(Camera camera) {
-        Boolean isDefected = new Random().nextInt(10) == 0; // Probability of defect: 1/10
+        Boolean isDefected = new Random().nextInt(6) == 0; // Probability of defect: 1/6
         return !isDefected;
     }
 
@@ -27,10 +27,4 @@ public final class Technician extends Employee {
     public void clean(Camera camera) {
         camera.setIsWipedClean(true);
     }
-
-    @Override
-    public String toString() {
-        return "Technician " + getName() + " " + getSurname() + "\nID: " +  getId() + "\nPhone number: " + getPhone();
-    }
-
 }

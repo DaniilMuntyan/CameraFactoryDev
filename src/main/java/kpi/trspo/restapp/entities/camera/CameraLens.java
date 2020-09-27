@@ -30,9 +30,4 @@ public final class CameraLens {
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "cameraLens", orphanRemoval = true)
     @JoinColumn(name = "camera_id")
     private Camera camera;
-
-    @Override
-    public String toString() {
-        return "Camera lens id: " + id + "\n" + "Focal length: " + focalLength + " mm\nLens type: " + lensType;
-    }
 }

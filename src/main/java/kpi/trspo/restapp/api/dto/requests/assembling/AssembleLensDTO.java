@@ -6,7 +6,7 @@ import lombok.Data;
 import java.util.UUID;
 
 @Data
-public final class AssembleLens {
+public final class AssembleLensDTO {
     private UUID collectorId;
     private Integer focalLength;
     private LensType lensType;

@@ -11,7 +11,6 @@ import java.util.UUID;
 @RequiredArgsConstructor
 @NoArgsConstructor
 public class Employee {
-
     @Id
     @GeneratedValue
     private UUID id;
@@ -24,9 +23,4 @@ public class Employee {
 
     @NonNull
     private String phone;
-
-    @Override
-    public String toString() {
-        return "Employee " + this.name + " " + this.surname + "\nID: " +  this.id + "\nPhone number: " + this.phone;
-    }
 }

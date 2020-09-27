@@ -12,11 +12,15 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/calibrator")
+@RequestMapping("/api/calibrators")
 public final class CalibratorController {
 
+    private final MachineService machineService;
+
     @Autowired
-    private MachineService machineService;
+    public CalibratorController(MachineService machineService) {
+        this.machineService = machineService;
+    }
 
     @PostMapping
     public ResponseEntity<Calibrator> create(@RequestBody MachineDTO machineDTO) {

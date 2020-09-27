@@ -15,14 +15,19 @@ import java.util.UUID;
 @Service
 public final class EmployeeService {
 
-    @Autowired
-    private CollectorRepository collectorRepository;
+    private final CollectorRepository collectorRepository;
+
+    private final ManagerRepository managerRepository;
+
+    private final TechnicianRepository technicianRepository;
 
     @Autowired
-    private ManagerRepository managerRepository;
-
-    @Autowired
-    private TechnicianRepository technicianRepository;
+    public EmployeeService(CollectorRepository collectorRepository, ManagerRepository managerRepository,
+                           TechnicianRepository technicianRepository) {
+        this.collectorRepository = collectorRepository;
+        this.managerRepository = managerRepository;
+        this.technicianRepository = technicianRepository;
+    }
 
     public Collector findCollector(UUID collectorId) {
         if (collectorId == null)
@@ -68,5 +73,4 @@ public final class EmployeeService {
     public Technician save(Technician technician) {
         return this.technicianRepository.save(technician);
     }
-
 }
