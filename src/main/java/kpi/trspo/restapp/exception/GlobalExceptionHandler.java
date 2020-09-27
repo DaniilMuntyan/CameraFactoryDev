@@ -10,7 +10,7 @@ import javax.jws.WebResult;
 import java.util.Date;
 
 @ControllerAdvice
-public class GlobalExceptionHandler {
+public final class GlobalExceptionHandler {
 
     @ExceptionHandler(ResourceNotFoundException.class)
     public ResponseEntity<?> exception(ResourceNotFoundException ex, WebRequest request) {

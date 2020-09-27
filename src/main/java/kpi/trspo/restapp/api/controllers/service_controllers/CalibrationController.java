@@ -12,7 +12,7 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/calibrate")
-public class CalibrationController {
+public final class CalibrationController {
 
     private final CalibrationService calibrationService;
 

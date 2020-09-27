@@ -13,7 +13,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/testers")
-public class TesterController {
+public final class TesterController {
 
     private final MachineService machineService;
 

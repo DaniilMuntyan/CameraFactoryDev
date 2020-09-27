@@ -17,7 +17,7 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/assemble/")
-public class AssembleController {
+public final class AssembleController {
 
     private final AssemblingService assemblingService;
 

@@ -14,7 +14,7 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/final_stage")
-public class FinalStageController {
+public final class FinalStageController {
 
     private final FinalStageService finalStageService;
 
